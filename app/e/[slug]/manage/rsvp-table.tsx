@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RSVP } from "@prisma/client";
+import type { RSVP } from "@prisma/client";
 import { format } from "date-fns";
 import { Check, X, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

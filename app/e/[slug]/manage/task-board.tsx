@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/lib/hooks/useToast";
-import { Task, TaskStatus, TaskRole } from "@prisma/client";
+import type { Task, TaskStatus, TaskRole } from "@prisma/client";
 import { Plus, X, Trash2, CheckCircle2, Circle, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 

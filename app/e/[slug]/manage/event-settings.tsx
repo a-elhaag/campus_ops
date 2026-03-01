@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/lib/hooks/useToast";
-import { Event } from "@prisma/client";
+import type { Event } from "@prisma/client";
 import { Globe, MapPin, AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface FormErrors {
