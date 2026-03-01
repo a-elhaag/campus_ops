@@ -3,35 +3,76 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
+// ─── Enums ──────────────────────────────────────────────────────────────────
+
+enum EventCategory {
+  General
+  Academic
+  Social
+  Sports
+  Cultural
+  Workshop
+  Competition
+}
+
+enum TaskRole {
+  Logistics
+  Marketing
+  Speakers
+  Registration
+  Catering
+  Technical
+}
+
+enum TaskStatus {
+  todo
+  doing
+  done
+}
+
+// ─── Models ─────────────────────────────────────────────────────────────────
+
 model Event {
-  id                  String   @id @default(uuid()) @db.Uuid
-  slug                String   @unique
+  id                  String        @id @default(uuid()) @db.Uuid
+  slug                String        @unique
   title               String
   description         String
+  category            EventCategory @default(General)
   starts_at           DateTime
   location            String
   capacity            Int?
   admin_code_hash     String
   organizer_code_hash String
-  created_at          DateTime @default(now())
+  created_at          DateTime      @default(now())
+  updated_at          DateTime      @updatedAt
 
   tasks Task[]
   rsvps RSVP[]
+
+  // Query-optimized indexes
+  @@index([category])
+  @@index([starts_at])
 }
 
 model Task {
   id         String     @id @default(uuid()) @db.Uuid
   event_id   String     @db.Uuid
   title      String
-  role       String     // Logistics, Marketing, Speakers, Registration
+  role       TaskRole
   status     TaskStatus @default(todo)
   created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
 
   event Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  // FK index + composite indexes for common queries
+  @@index([event_id, created_at])
+  @@index([event_id, status])
 }
 
 model RSVP {
@@ -41,12 +82,13 @@ model RSVP {
   contact    String?
   checked_in Boolean  @default(false)
   created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   event Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
-}
 
-enum TaskStatus {
-  todo
-  doing
-  done
+  // Prevent duplicate RSVPs from the same person for the same event
+  @@unique([event_id, name])
+  // Composite indexes for common queries
+  @@index([event_id, created_at])
+  @@index([event_id, checked_in])
 }
