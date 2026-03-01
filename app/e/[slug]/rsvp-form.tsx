@@ -53,20 +53,26 @@ export default function RSVPForm({ slug }: { slug: string }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-3">
-        <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2">
+        <Label
+          htmlFor="name"
+          className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
+        >
           Full Name
         </Label>
-        <Input 
-          id="name" 
-          name="name" 
-          required 
-          placeholder="Jane Doe" 
+        <Input
+          id="name"
+          name="name"
+          required
+          placeholder="Jane Doe"
           className="h-12 rounded-xl text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-gray-100 dark:placeholder-gray-400"
         />
       </div>
 
       <div className="space-y-3">
-        <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2">
+        <Label
+          htmlFor="email"
+          className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
+        >
           Email Address <span className="text-red-500 font-bold">*</span>
         </Label>
         <Input
@@ -80,7 +86,10 @@ export default function RSVPForm({ slug }: { slug: string }) {
       </div>
 
       <div className="space-y-3">
-        <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2">
+        <Label
+          htmlFor="phone"
+          className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
+        >
           Phone Number <span className="text-red-500 font-bold">*</span>
         </Label>
         <Input
@@ -93,8 +102,8 @@ export default function RSVPForm({ slug }: { slug: string }) {
         />
       </div>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         disabled={loading}
         className="w-full neo-vibrant h-12 rounded-2xl text-base font-bold uppercase tracking-widest disabled:opacity-50 transition-all mt-8"
       >
