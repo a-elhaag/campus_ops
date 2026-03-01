@@ -28,7 +28,7 @@ export default function LoginPage({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.currentTarget);
     const code = formData.get("code") as string;
 
@@ -55,7 +55,9 @@ export default function LoginPage({
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || "Invalid code. Please check and try again.");
+        throw new Error(
+          result.error || "Invalid code. Please check and try again.",
+        );
       }
 
       router.push(`/e/${slug}/manage`);
@@ -97,10 +99,8 @@ export default function LoginPage({
                     <span>{error}</span>
                   </div>
                   <p className="text-xs text-red-800 dark:text-red-200 ml-8">
-                    Check that you've entered the code correctly, or contact the event organizer.
-                  </p>
-                </div>
-              )}
+                    Check that you've entered the code correctly, or contact the
+                    event organizer.
                   </p>
                 </div>
               )}
