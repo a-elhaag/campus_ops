@@ -106,12 +106,15 @@ export default function LoginPage({
               )}
 
               <div className="space-y-3">
-                <Label
-                  htmlFor="code"
-                  className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
-                >
-                  Access Code <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center gap-1 ml-2">
+                  <Label
+                    htmlFor="code"
+                    className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300"
+                  >
+                    Access Code
+                  </Label>
+                  <span className="text-red-500">*</span>
+                </div>
                 <Input
                   id="code"
                   name="code"

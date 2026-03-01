@@ -149,12 +149,15 @@ export default function RSVPForm({ slug }: { slug: string }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-3">
-        <Label
-          htmlFor="name"
-          className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
-        >
-          Full Name <span className="text-red-500 font-bold">*</span>
-        </Label>
+        <div className="flex items-center gap-1 ml-2">
+          <Label
+            htmlFor="name"
+            className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300"
+          >
+            Full Name
+          </Label>
+          <span className="text-red-500 font-bold">*</span>
+        </div>
         <div className="relative">
           <Input
             id="name"
@@ -182,12 +185,15 @@ export default function RSVPForm({ slug }: { slug: string }) {
       </div>
 
       <div className="space-y-3">
-        <Label
-          htmlFor="email"
-          className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
-        >
-          Email Address <span className="text-red-500 font-bold">*</span>
-        </Label>
+        <div className="flex items-center gap-1 ml-2">
+          <Label
+            htmlFor="email"
+            className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300"
+          >
+            Email Address
+          </Label>
+          <span className="text-red-500 font-bold">*</span>
+        </div>
         <div className="relative">
           <Input
             id="email"
@@ -216,12 +222,15 @@ export default function RSVPForm({ slug }: { slug: string }) {
       </div>
 
       <div className="space-y-3">
-        <Label
-          htmlFor="phone"
-          className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
-        >
-          Phone Number <span className="text-red-500 font-bold">*</span>
-        </Label>
+        <div className="flex items-center gap-1 ml-2">
+          <Label
+            htmlFor="phone"
+            className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300"
+          >
+            Phone Number
+          </Label>
+          <span className="text-red-500 font-bold">*</span>
+        </div>
         <div className="relative">
           <Input
             id="phone"

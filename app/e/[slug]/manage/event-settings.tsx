@@ -138,12 +138,15 @@ export default function EventSettings({ event }: { event: Event }) {
         </h3>
 
         <div className="space-y-2">
-          <Label
-            htmlFor="title"
-            className="ml-2 uppercase tracking-widest text-xs font-semibold text-gray-700 dark:text-gray-300"
-          >
-            Event Name <span className="text-red-500">*</span>
-          </Label>
+          <div className="flex items-center gap-1 ml-2">
+            <Label
+              htmlFor="title"
+              className="uppercase tracking-widest text-xs font-semibold text-gray-700 dark:text-gray-300"
+            >
+              Event Name
+            </Label>
+            <span className="text-red-500">*</span>
+          </div>
           <Input
             id="title"
             name="title"
@@ -172,12 +175,15 @@ export default function EventSettings({ event }: { event: Event }) {
         </div>
 
         <div className="space-y-2">
-          <Label
-            htmlFor="description"
-            className="ml-2 uppercase tracking-widest text-xs font-semibold text-gray-700 dark:text-gray-300"
-          >
-            Description <span className="text-red-500">*</span>
-          </Label>
+          <div className="flex items-center gap-1 ml-2">
+            <Label
+              htmlFor="description"
+              className="uppercase tracking-widest text-xs font-semibold text-gray-700 dark:text-gray-300"
+            >
+              Description
+            </Label>
+            <span className="text-red-500">*</span>
+          </div>
           <Input
             id="description"
             name="description"
@@ -273,12 +279,15 @@ export default function EventSettings({ event }: { event: Event }) {
 
         {!isOnline && (
           <div className="space-y-2">
-            <Label
-              htmlFor="location"
-              className="ml-2 uppercase tracking-widest text-xs font-semibold text-gray-700 dark:text-gray-300"
-            >
-              Location <span className="text-red-500">*</span>
-            </Label>
+            <div className="flex items-center gap-1 ml-2">
+              <Label
+                htmlFor="location"
+                className="uppercase tracking-widest text-xs font-semibold text-gray-700 dark:text-gray-300"
+              >
+                Location
+              </Label>
+              <span className="text-red-500">*</span>
+            </div>
             <Input
               id="location"
               name="location"
