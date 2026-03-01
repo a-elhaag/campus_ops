@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/ui/logo";
+import { DatePicker } from "@/components/ui/date-picker";
 import { useToast } from "@/lib/hooks/useToast";
 import {
   CalendarDays,
@@ -32,6 +33,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [mode, setMode] = useState<"deploy" | "manage">("deploy");
   const [loginCode, setLoginCode] = useState("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [successData, setSuccessData] = useState<{
     url: string;
     organizer_code: string;
@@ -46,12 +48,16 @@ export default function Home() {
     const formData = new FormData(e.currentTarget);
     const data: Record<string, any> = Object.fromEntries(formData.entries());
 
-    if (data.event_date && data.event_time) {
+    if (selectedDate && data.event_time) {
       data.starts_at = new Date(
-        `${data.event_date}T${data.event_time}`,
+        `${selectedDate}T${data.event_time}`,
       ).toISOString();
       delete data.event_date;
       delete data.event_time;
+    } else {
+      toast.error("Please select both date and time");
+      setLoading(false);
+      return;
     }
 
     try {
@@ -566,16 +572,10 @@ export default function Home() {
                               <CalendarDays className="w-3 h-3 text-[#4A6E91]" />{" "}
                               Date
                             </Label>
-                            <div className="relative overflow-hidden rounded-[1.5rem] neo-pressed">
-                              <Input
-                                id="event_date"
-                                name="event_date"
-                                type="date"
-                                required
-                                className="bg-transparent border-none shadow-none focus-visible:ring-0 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                              />
-                              <CalendarDays className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A6E91] pointer-events-none opacity-50" />
-                            </div>
+                            <DatePicker
+                              value={selectedDate}
+                              onChange={setSelectedDate}
+                            />
                           </div>
                           <div className="space-y-2">
                             <Label
