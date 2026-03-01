@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -40,29 +39,42 @@ export default function TaskBoard({ slug, initialTasks }: { slug: string, initia
 
     async function updateStatus(id: string, newStatus: TaskStatus) {
         try {
+            // Optimistic update
+            const oldTasks = [...tasks];
+            setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
+
             const res = await fetch(`/api/manage/${slug}/tasks/${id}`, {
                 method: "PATCH",
                 body: JSON.stringify({ status: newStatus }),
                 headers: { "Content-Type": "application/json" }
             });
+
             if (res.ok) {
-                setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
                 router.refresh();
+            } else {
+                setTasks(oldTasks); // Revert
             }
         } catch (e) { }
     }
 
     async function handleDelete(id: string) {
         setIsDeleting(id);
+        const oldTasks = [...tasks];
+        // Optimistic delete
+        setTasks(tasks.filter(t => t.id !== id));
+
         try {
             const res = await fetch(`/api/manage/${slug}/tasks/${id}`, {
                 method: "DELETE"
             });
             if (res.ok) {
-                setTasks(tasks.filter(t => t.id !== id));
                 router.refresh();
+            } else {
+                setTasks(oldTasks); // Revert
             }
-        } catch (e) { } finally {
+        } catch (e) {
+            setTasks(oldTasks);
+        } finally {
             setIsDeleting(null);
         }
     }
@@ -79,12 +91,17 @@ export default function TaskBoard({ slug, initialTasks }: { slug: string, initia
                 <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                     Active Operations <Badge className="rounded-full bg-[#4A6E91]/10 text-[#4A6E91] border-none">{tasks.length}</Badge>
                 </h3>
-                <Button
+
+                <motion.button
+                    layoutId="task-modal"
                     onClick={() => setIsModalOpen(true)}
-                    className="rounded-full shadow-lg hover:shadow-xl transition-all flex items-center gap-2 px-6"
+                    className="inline-flex h-9 items-center justify-center rounded-full bg-[#24292E] px-6 text-sm font-medium text-white shadow-lg transition-colors hover:bg-[#24292E]/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 gap-2"
                 >
-                    <Plus className="w-4 h-4" /> New Task
-                </Button>
+                    <motion.div layoutId="task-modal-icon">
+                        <Plus className="w-4 h-4" />
+                    </motion.div>
+                    <motion.span layoutId="task-modal-text">New Task</motion.span>
+                </motion.button>
             </div>
 
             <div className="space-y-4">
@@ -98,9 +115,11 @@ export default function TaskBoard({ slug, initialTasks }: { slug: string, initia
                     {tasks.map(task => (
                         <motion.div
                             key={task.id}
+                            layout
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
+                            exit={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
+                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
                             className="flex items-center justify-between p-5 rounded-[1.5rem] neo-flat group hover:bg-black/[0.02] transition-colors"
                         >
                             <div className="flex items-center gap-4">
@@ -157,14 +176,10 @@ export default function TaskBoard({ slug, initialTasks }: { slug: string, initia
                         />
                         <motion.div
                             layoutId="task-modal"
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="relative w-full max-w-md p-8 rounded-[2.5rem] neo-flat overflow-hidden"
+                            className="relative w-full max-w-md p-8 rounded-[2.5rem] bg-white shadow-2xl overflow-hidden border border-gray-100"
                         >
                             <div className="flex justify-between items-center mb-8">
-                                <h3 className="text-2xl font-bold text-gray-800">New Task</h3>
+                                <motion.h3 layoutId="task-modal-text" className="text-2xl font-bold text-gray-800">New Task</motion.h3>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
                                     className="p-2 rounded-xl neo-pressed text-gray-400 hover:text-gray-600 transition-colors"
@@ -189,23 +204,26 @@ export default function TaskBoard({ slug, initialTasks }: { slug: string, initia
                                     <div className="grid grid-cols-2 gap-3">
                                         {Object.values(TaskRole).map((r) => (
                                             <button
-                                                key={r}
+                                                key={r as string}
                                                 type="button"
-                                                onClick={() => setRole(r)}
+                                                onClick={() => setRole(r as TaskRole)}
                                                 className={`px-4 py-3 rounded-xl text-xs font-bold transition-all ${role === r
                                                     ? "neo-pressed text-[#4A6E91]"
                                                     : "neo-flat text-gray-500"}`}
                                             >
-                                                {r}
+                                                {r as string}
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
                                 <div className="pt-4">
-                                    <Button type="submit" className="w-full py-6 rounded-2xl shadow-xl">
+                                    <button
+                                        type="submit"
+                                        className="w-full inline-flex h-12 items-center justify-center rounded-2xl bg-[#24292E] px-8 text-sm font-medium text-white shadow transition-colors hover:bg-[#24292E]/90"
+                                    >
                                         Authorize Task
-                                    </Button>
+                                    </button>
                                 </div>
                             </form>
                         </motion.div>

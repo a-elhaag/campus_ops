@@ -1,29 +1,24 @@
 import { NextResponse } from 'next/server';
-import { getEventBySlug } from '@/services/event';
-import { verifyHash, signToken } from '@/lib/auth';
+import { getEventByCode } from '@/services/event';
+import { signToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
     try {
-        const { slug, code } = await request.json();
+        const { code } = await request.json();
 
-        if (!slug || !code) {
-            return NextResponse.json({ error: 'Missing slug or code' }, { status: 400 });
+        if (!code) {
+            return NextResponse.json({ error: 'Missing access code' }, { status: 400 });
         }
 
-        const event = await getEventBySlug(slug);
-        if (!event) {
-            return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+        const result = await getEventByCode(code);
+        if (!result) {
+            return NextResponse.json({ error: 'Invalid access code' }, { status: 401 });
         }
 
-        const isAdmin = await verifyHash(code, event.admin_code_hash);
-        const isOrganizer = await verifyHash(code, event.organizer_code_hash);
+        const { event, role } = result;
+        const slug = event.slug;
 
-        if (!isAdmin && !isOrganizer) {
-            return NextResponse.json({ error: 'Invalid code' }, { status: 401 });
-        }
-
-        const role = isAdmin ? 'admin' : 'organizer';
         const token = await signToken({ slug, role });
 
         const cookieStore = await cookies();
@@ -35,7 +30,7 @@ export async function POST(request: Request) {
             maxAge: 24 * 60 * 60, // 1 day
         });
 
-        return NextResponse.json({ success: true, role });
+        return NextResponse.json({ success: true, role, slug });
     } catch (error) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }

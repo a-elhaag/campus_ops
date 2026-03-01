@@ -13,7 +13,7 @@ export async function GET(
         }
 
         // Omit sensitive data
-        const { admin_code_hash, organizer_code_hash, ...publicData } = event;
+        const { admin_code, organizer_code, ...publicData } = event;
 
         return NextResponse.json({ success: true, event: publicData });
     } catch (error) {
