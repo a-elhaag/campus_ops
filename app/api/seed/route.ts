@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createEvent } from "@/services/event";
-import type { EventCategory } from "@prisma/client";
+import { EventCategory } from "@prisma/client";
 
 export async function POST(request: Request) {
   try {
