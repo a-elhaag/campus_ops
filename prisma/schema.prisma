@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id                  String   @id @default(uuid()) @db.Uuid
+  slug                String   @unique
+  title               String
+  description         String
+  starts_at           DateTime
+  location            String
+  capacity            Int?
+  admin_code_hash     String
+  organizer_code_hash String
+  created_at          DateTime @default(now())
+
+  tasks Task[]
+  rsvps RSVP[]
+}
+
+model Task {
+  id         String     @id @default(uuid()) @db.Uuid
+  event_id   String     @db.Uuid
+  title      String
+  role       String     // Logistics, Marketing, Speakers, Registration
+  status     TaskStatus @default(todo)
+  created_at DateTime   @default(now())
+
+  event Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+}
+
+model RSVP {
+  id         String   @id @default(uuid()) @db.Uuid
+  event_id   String   @db.Uuid
+  name       String
+  contact    String?
+  checked_in Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  event Event @relation(fields: [event_id], references: [id], onDelete: Cascade)
+}
+
+enum TaskStatus {
+  todo
+  doing
+  done
+}
