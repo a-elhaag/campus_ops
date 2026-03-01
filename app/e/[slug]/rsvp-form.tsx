@@ -42,21 +42,32 @@ export default function RSVPForm({ slug }: { slug: string }) {
 
   if (success) {
     return (
-      <div className="p-4 bg-[#4A6E91]/10 backdrop-blur-sm border border-[#4A6E91]/20 text-[#24292E] rounded-lg text-sm font-bold text-center">
-        ✨ Registration Confirmed!
+      <div className="p-6 bg-green-50 dark:bg-green-900/20 border border-green-200/50 dark:border-green-200/10 text-green-900 dark:text-green-100 rounded-2xl text-center space-y-2">
+        <p className="text-lg font-bold">✨ Registration Confirmed</p>
+        <p className="text-sm text-green-800 dark:text-green-200">
+          Thank you for registering! We'll see you at the event.
+        </p>
       </div>
     );
   }
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">Full Name</Label>
-        <Input id="name" name="name" required placeholder="Jane Doe" />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-3">
+        <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2">
+          Full Name
+        </Label>
+        <Input 
+          id="name" 
+          name="name" 
+          required 
+          placeholder="Jane Doe" 
+          className="h-12 rounded-xl text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-gray-100 dark:placeholder-gray-400"
+        />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="email">
-          Email Address <span className="text-red-500">*</span>
+      <div className="space-y-3">
+        <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2">
+          Email Address <span className="text-red-500 font-bold">*</span>
         </Label>
         <Input
           id="email"
@@ -64,12 +75,13 @@ export default function RSVPForm({ slug }: { slug: string }) {
           type="email"
           required
           placeholder="jane@example.com"
+          className="h-12 rounded-xl text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-gray-100 dark:placeholder-gray-400"
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="phone">
-          Phone Number <span className="text-red-500">*</span>
+      <div className="space-y-3">
+        <Label htmlFor="phone" className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2">
+          Phone Number <span className="text-red-500 font-bold">*</span>
         </Label>
         <Input
           id="phone"
@@ -77,12 +89,17 @@ export default function RSVPForm({ slug }: { slug: string }) {
           type="tel"
           required
           placeholder="+1 (555) 123-4567"
+          className="h-12 rounded-xl text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-gray-100 dark:placeholder-gray-400"
         />
       </div>
 
-      <Button type="submit" className="w-full" disabled={loading}>
+      <button 
+        type="submit" 
+        disabled={loading}
+        className="w-full neo-vibrant h-12 rounded-2xl text-base font-bold uppercase tracking-widest disabled:opacity-50 transition-all mt-8"
+      >
         {loading ? "Registering..." : "Confirm RSVP"}
-      </Button>
+      </button>
     </form>
   );
 }
