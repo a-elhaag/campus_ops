@@ -41,12 +41,11 @@ export default function RSVPForm({ slug }: { slug: string }) {
 
     if (success) {
         return (
-            <div className="p-4 bg-green-50/50 backdrop-blur-sm border border-green-200 text-green-800 rounded-lg text-sm font-medium text-center">
-                🎉 You are successfully registered!
+            <div className="p-4 bg-[#4A6E91]/10 backdrop-blur-sm border border-[#4A6E91]/20 text-[#24292E] rounded-lg text-sm font-bold text-center">
+                ✨ Registration Confirmed!
             </div>
         );
     }
-
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             {error && <div className="text-red-500 text-sm font-medium">{error}</div>}

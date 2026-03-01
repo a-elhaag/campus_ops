@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { updateTaskStatus } from '@/services/task';
 import { revalidatePath } from 'next/cache';
+import prisma from '@/lib/prisma';
 
 export async function PATCH(
     request: Request,
@@ -18,6 +19,20 @@ export async function PATCH(
 
         revalidatePath(`/e/${slug}/manage`);
         return NextResponse.json({ success: true, task });
+    } catch (error) {
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ slug: string; id: string }> }
+) {
+    const { slug, id } = await params;
+    try {
+        await prisma.task.delete({ where: { id } });
+        revalidatePath(`/e/${slug}/manage`);
+        return NextResponse.json({ success: true });
     } catch (error) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }

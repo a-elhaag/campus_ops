@@ -47,7 +47,7 @@ export default function EventSettings({ event }: { event: Event }) {
             <form onSubmit={handleUpdateEvent} className="space-y-4">
                 <h3 className="text-xl font-bold text-gray-800">Edit Event Information</h3>
 
-                {message && <p className="text-sm font-semibold text-[#00B4D8]">{message}</p>}
+                {message && <p className="text-sm font-semibold text-[#4A6E91]">{message}</p>}
 
                 <div className="space-y-2">
                     <Label htmlFor="title" className="ml-2">Event Name</Label>

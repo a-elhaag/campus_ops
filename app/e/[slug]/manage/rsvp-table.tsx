@@ -51,7 +51,7 @@ export default function RsvpTable({ slug, initialRsvps }: { slug: string, initia
                                 <button
                                     onClick={() => toggleCheckIn(rsvp.id, !rsvp.checked_in)}
                                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all focus:outline-none ${rsvp.checked_in
-                                        ? "neo-pressed text-[#9D4EDD]"
+                                        ? "neo-pressed text-[#4A6E91]"
                                         : "neo-flat text-gray-500 hover:text-gray-800"
                                         }`}
                                 >

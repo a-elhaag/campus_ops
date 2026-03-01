@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { TaskStatus } from '@prisma/client';
+import { TaskStatus, TaskRole } from '@prisma/client';
 
 export async function getTasksForEvent(event_id: string) {
     return prisma.task.findMany({
@@ -8,7 +8,7 @@ export async function getTasksForEvent(event_id: string) {
     });
 }
 
-export async function createTask(event_id: string, data: { title: string; role: string }) {
+export async function createTask(event_id: string, data: { title: string; role: TaskRole }) {
     return prisma.task.create({
         data: {
             event_id,
@@ -26,7 +26,7 @@ export async function updateTaskStatus(task_id: string, status: TaskStatus) {
     });
 }
 
-export async function updateTask(task_id: string, data: { title?: string; role?: string; status?: TaskStatus }) {
+export async function updateTask(task_id: string, data: { title?: string; role?: TaskRole; status?: TaskStatus }) {
     return prisma.task.update({
         where: { id: task_id },
         data,

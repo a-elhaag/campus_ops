@@ -15,8 +15,8 @@ function Badge({ className, variant = "default", ...props }: BadgeProps) {
                     "border-transparent bg-gray-100 text-gray-900 hover:bg-gray-100/80": variant === "secondary",
                     "text-gray-950": variant === "outline",
                     "border-transparent bg-yellow-100 text-yellow-800": variant === "todo",
-                    "border-transparent bg-blue-100 text-blue-800": variant === "doing",
-                    "border-transparent bg-green-100 text-green-800": variant === "done",
+                    "border-transparent bg-[#85929E]/10 text-[#24292E]": variant === "doing",
+                    "border-transparent bg-[#4A6E91]/10 text-[#4A6E91]": variant === "done",
                 },
                 className
             )}

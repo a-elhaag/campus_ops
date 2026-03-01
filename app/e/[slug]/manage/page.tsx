@@ -36,8 +36,8 @@ export default async function ManageDashboard({ params }: { params: Promise<{ sl
         <main className="min-h-screen p-4 md:p-8 space-y-8 max-w-7xl mx-auto pt-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">{event.title} Dashboard</h1>
-                    <p className="text-gray-500">Manage operations, tasks, and attendees.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">{event.title} Hub</h1>
+                    <p className="text-gray-500">Master control for event operations and registration.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <Badge variant={role === 'admin' ? 'default' : 'secondary'} className="px-3 py-1 text-sm">
@@ -65,7 +65,7 @@ export default async function ManageDashboard({ params }: { params: Promise<{ sl
                         <CardTitle className="text-sm font-medium text-gray-500">Checked In</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold">{rsvps.filter((r) => r.checked_in).length}</div>
+                        <div className="text-3xl font-bold">{rsvps.filter((r: any) => r.checked_in).length}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -73,7 +73,7 @@ export default async function ManageDashboard({ params }: { params: Promise<{ sl
                         <CardTitle className="text-sm font-medium text-gray-500">Pending Tasks</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold">{tasks.filter((t) => t.status !== 'done').length}</div>
+                        <div className="text-3xl font-bold">{tasks.filter((t: any) => t.status !== 'done').length}</div>
                     </CardContent>
                 </Card>
             </div>
