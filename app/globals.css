@@ -1,26 +1,120 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-surface: var(--surface);
+
+  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas;
+}
+
+:root {
+  /* Soft, slightly cool off-white background matching premium neumorphic aesthetic */
+  --background: #EBEEF5;
+  --foreground: #1D1E2C;
+
+  /* Primary vibrant purple-to-fuchsia gradient accent */
+  --accent: #9D4EDD;
+  --accent-foreground: #FFFFFF;
+
+  /* Surface colors for cards */
+  --surface: #EBEEF5;
+  --surface-hover: #F2F5F9;
+
+  /* Neumorphic shadow colors */
+  --shadow-light: rgba(255, 255, 255, 1);
+  --shadow-dark: rgba(163, 177, 198, 0.6);
+  --shadow-dark-strong: rgba(163, 177, 198, 0.8);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1B1B28;
+    --foreground: #F4F5F7;
+    --accent: #B074ED;
+    --accent-foreground: #FFFFFF;
+
+    --surface: #1B1B28;
+    --surface-hover: #222230;
+
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.6);
+    --shadow-dark-strong: rgba(0, 0, 0, 0.9);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  /* Very subtle animated background gradient to give it life without overpowering */
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(157, 78, 221, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(0, 180, 216, 0.03) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Core Neumorphic Utility Classes */
+
+/* Flat surface (Extruded) */
+.neo-flat {
+  background: var(--surface);
+  box-shadow:
+    8px 8px 16px var(--shadow-dark),
+    -8px -8px 16px var(--shadow-light);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.neo-flat:hover {
+  box-shadow:
+    12px 12px 20px var(--shadow-dark),
+    -12px -12px 20px var(--shadow-light);
+  transform: translateY(-2px);
+}
+
+/* Pressed surface (Depressed/Inset) */
+.neo-pressed {
+  background: var(--surface);
+  box-shadow:
+    inset 5px 5px 10px var(--shadow-dark),
+    inset -5px -5px 10px var(--shadow-light);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+/* Vibrant Gradient Elements (e.g. primary buttons) */
+.neo-vibrant {
+  background: linear-gradient(135deg, #b000ff, #5c00ff);
+  color: white;
+  box-shadow:
+    0px 10px 20px rgba(138, 43, 226, 0.3),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.neo-vibrant:hover {
+  box-shadow:
+    0px 15px 25px rgba(138, 43, 226, 0.4),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.neo-vibrant:active {
+  transform: translateY(1px);
+  box-shadow:
+    0px 5px 10px rgba(138, 43, 226, 0.4),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .neo-flat {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
 }
