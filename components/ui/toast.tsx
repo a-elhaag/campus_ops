@@ -86,14 +86,14 @@ function ToastItem({
   const getStyles = (type?: string) => {
     switch (type) {
       case "success":
-        return "bg-white text-green-700 neo-flat border border-green-200/30 shadow-lg";
+        return "bg-white dark:bg-gray-800 text-green-700 dark:text-green-400 neo-flat border border-green-200/50 dark:border-green-700/50 shadow-lg";
       case "error":
-        return "bg-white text-red-700 neo-flat border border-red-200/30 shadow-lg";
+        return "bg-white dark:bg-gray-800 text-red-700 dark:text-red-400 neo-flat border border-red-200/50 dark:border-red-700/50 shadow-lg";
       case "warning":
-        return "bg-white text-yellow-700 neo-flat border border-yellow-200/30 shadow-lg";
+        return "bg-white dark:bg-gray-800 text-yellow-700 dark:text-yellow-400 neo-flat border border-yellow-200/50 dark:border-yellow-700/50 shadow-lg";
       case "info":
       default:
-        return "bg-white text-blue-700 neo-flat border border-blue-200/30 shadow-lg";
+        return "bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 neo-flat border border-blue-200/50 dark:border-blue-700/50 shadow-lg";
     }
   };
 

@@ -8,7 +8,9 @@
   --color-surface: var(--surface);
 
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas;
 }
 
 html {
@@ -17,16 +19,16 @@ html {
 
 :root {
   /* Premium bluish-gray off-white background */
-  --background: #F1F4F9;
-  --foreground: #24292E;
+  --background: #f1f4f9;
+  --foreground: #24292e;
 
   /* Muted Slate Blue accent */
-  --accent: #4A6E91;
-  --accent-foreground: #FFFFFF;
+  --accent: #4a6e91;
+  --accent-foreground: #ffffff;
 
   /* Surface colors for cards */
-  --surface: #F1F4F9;
-  --surface-hover: #E8EEF5;
+  --surface: #f1f4f9;
+  --surface-hover: #e8eef5;
 
   /* Neumorphic shadow colors optimized for bluish grey */
   --shadow-light: rgba(255, 255, 255, 1);
@@ -36,12 +38,12 @@ html {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1B1B28;
-    --foreground: #F4F5F7;
-    --accent: #B074ED;
-    --accent-foreground: #FFFFFF;
+    --background: #1b1b28;
+    --foreground: #f4f5f7;
+    --accent: #b074ed;
+    --accent-foreground: #ffffff;
 
-    --surface: #1B1B28;
+    --surface: #1b1b28;
     --surface-hover: #222230;
 
     --shadow-light: rgba(255, 255, 255, 0.05);
@@ -57,8 +59,16 @@ body {
   min-height: 100vh;
   /* Deep, professional animated background gradient */
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(74, 110, 145, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 90% 80%, rgba(36, 41, 46, 0.03) 0%, transparent 50%);
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(74, 110, 145, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(36, 41, 46, 0.03) 0%,
+      transparent 50%
+    );
   background-attachment: fixed;
 }
 
@@ -81,6 +91,16 @@ body {
   transform: translateY(-2px);
 }
 
+@media (prefers-color-scheme: dark) {
+  .neo-flat {
+    background: #2a2a38;
+  }
+
+  .neo-flat:hover {
+    background: #323240;
+  }
+}
+
 /* Pressed surface (Depressed/Inset) */
 .neo-pressed {
   background: var(--surface);
@@ -93,7 +113,7 @@ body {
 
 /* Professional Slate Gradient Elements */
 .neo-vibrant {
-  background: linear-gradient(135deg, #4A6E91, #24292E);
+  background: linear-gradient(135deg, #4a6e91, #24292e);
   color: white;
   box-shadow:
     0px 10px 20px rgba(74, 110, 145, 0.25),
