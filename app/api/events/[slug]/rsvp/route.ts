@@ -9,10 +9,18 @@ export async function POST(
 ) {
     const { slug } = await params;
     try {
-        const { name, contact } = await request.json();
+        const { name, email, phone } = await request.json();
 
         if (!name) {
             return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+        }
+
+        if (!email) {
+            return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+        }
+
+        if (!phone) {
+            return NextResponse.json({ error: 'Phone is required' }, { status: 400 });
         }
 
         const event = await getEventBySlug(slug);
@@ -22,6 +30,8 @@ export async function POST(
 
         // Optional: check capacity here
 
+        // Combine email and phone into contact field
+        const contact = `${email} | ${phone}`;
         const rsvp = await createRSVP(event.id, { name, contact });
 
         // Revalidate event page and dashboard

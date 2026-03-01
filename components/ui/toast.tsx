@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import { X, CheckCircle2, AlertCircle, XCircle, Info } from "lucide-react";
 
 export interface Toast {
   id: string;
@@ -86,28 +86,28 @@ function ToastItem({
   const getStyles = (type?: string) => {
     switch (type) {
       case "success":
-        return "bg-gradient-to-br from-green-500 to-green-600 text-white shadow-xl border border-green-400/50";
+        return "bg-white text-green-700 neo-flat border border-green-200/30 shadow-lg";
       case "error":
-        return "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-xl border border-red-400/50";
+        return "bg-white text-red-700 neo-flat border border-red-200/30 shadow-lg";
       case "warning":
-        return "bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 shadow-xl border border-yellow-300/50";
+        return "bg-white text-yellow-700 neo-flat border border-yellow-200/30 shadow-lg";
       case "info":
       default:
-        return "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-xl border border-blue-400/50";
+        return "bg-white text-blue-700 neo-flat border border-blue-200/30 shadow-lg";
     }
   };
 
   const getIcon = (type?: string) => {
     switch (type) {
       case "success":
-        return "✓";
+        return <CheckCircle2 size={20} className="flex-shrink-0" />;
       case "error":
-        return "✕";
+        return <XCircle size={20} className="flex-shrink-0" />;
       case "warning":
-        return "⚠";
+        return <AlertCircle size={20} className="flex-shrink-0" />;
       case "info":
       default:
-        return "ℹ";
+        return <Info size={20} className="flex-shrink-0" />;
     }
   };
 
@@ -125,9 +125,7 @@ function ToastItem({
           getStyles(toast.type),
         )}
       >
-        <span className="text-lg flex-shrink-0 drop-shadow-lg">
-          {getIcon(toast.type)}
-        </span>
+        {getIcon(toast.type)}
         <p className="flex-1 text-sm font-medium">{toast.message}</p>
         <button
           onClick={() => onRemove(toast.id)}

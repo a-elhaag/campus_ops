@@ -55,8 +55,13 @@ export default function RSVPForm({ slug }: { slug: string }) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="contact">Contact Info (Optional)</Label>
-        <Input id="contact" name="contact" placeholder="Email or Phone" />
+        <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
+        <Input id="email" name="email" type="email" required placeholder="jane@example.com" />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="phone">Phone Number <span className="text-red-500">*</span></Label>
+        <Input id="phone" name="phone" type="tel" required placeholder="+1 (555) 123-4567" />
       </div>
 
       <Button type="submit" className="w-full" disabled={loading}>
