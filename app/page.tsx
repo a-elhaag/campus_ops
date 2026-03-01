@@ -6,11 +6,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/ui/logo";
-import { CalendarDays, Users, MapPin, KeyRound, ShieldCheck, ArrowRight, Sparkles, Clock, CheckCircle2, Copy, X, Layers, Zap, Database } from "lucide-react";
+import { useToast } from "@/lib/hooks/useToast";
+import {
+  CalendarDays,
+  Users,
+  MapPin,
+  KeyRound,
+  ShieldCheck,
+  ArrowRight,
+  Sparkles,
+  Clock,
+  CheckCircle2,
+  Copy,
+  X,
+  Layers,
+  Zap,
+  Database,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [mode, setMode] = useState<"deploy" | "manage">("deploy");
@@ -30,16 +47,18 @@ export default function Home() {
     const data: Record<string, any> = Object.fromEntries(formData.entries());
 
     if (data.event_date && data.event_time) {
-      data.starts_at = new Date(`${data.event_date}T${data.event_time}`).toISOString();
+      data.starts_at = new Date(
+        `${data.event_date}T${data.event_time}`,
+      ).toISOString();
       delete data.event_date;
       delete data.event_time;
     }
 
     try {
-      const response = await fetch('/api/seed', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+      const response = await fetch("/api/seed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
@@ -51,10 +70,11 @@ export default function Home() {
       setSuccessData({
         url: `/e/${result.event.slug}`,
         organizer_code: result.organizer_code,
-        admin_code: result.admin_code
+        admin_code: result.admin_code,
       });
+      toast.success("Event created successfully!");
     } catch (err: any) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -66,10 +86,10 @@ export default function Home() {
     setError("");
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: loginCode })
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: loginCode }),
       });
 
       if (!response.ok) {
@@ -78,9 +98,10 @@ export default function Home() {
       }
 
       const result = await response.json();
+      toast.success("Logged in successfully!");
       router.push(`/e/${result.slug}/manage`);
     } catch (err: any) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -90,7 +111,10 @@ export default function Home() {
     return (
       <main className="relative flex min-h-screen flex-col items-center justify-center p-4 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#4A6E91]/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#85929E]/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#85929E]/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-pulse"
+          style={{ animationDelay: "2s" }}
+        ></div>
 
         <motion.div
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -107,8 +131,12 @@ export default function Home() {
             >
               <CheckCircle2 className="w-8 h-8 text-slate-600" />
             </motion.div>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">Workspace Ready</h2>
-            <p className="text-gray-500">Your event environment has been successfully generated.</p>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
+              Workspace Ready
+            </h2>
+            <p className="text-gray-500">
+              Your event environment has been successfully generated.
+            </p>
           </div>
 
           <div className="space-y-4 mb-8">
@@ -118,10 +146,15 @@ export default function Home() {
                   <div className="w-8 h-8 rounded-lg bg-[#4A6E91]/10 flex items-center justify-center text-[#4A6E91]">
                     <KeyRound className="w-4 h-4" />
                   </div>
-                  <span className="text-sm font-bold text-gray-700 uppercase tracking-wider">Admin Code</span>
+                  <span className="text-sm font-bold text-gray-700 uppercase tracking-wider">
+                    Admin Code
+                  </span>
                 </div>
                 <button
-                  onClick={() => navigator.clipboard.writeText(successData.admin_code)}
+                  onClick={() => {
+                    navigator.clipboard.writeText(successData.admin_code);
+                    toast.success("Admin code copied!");
+                  }}
                   className="p-2 rounded-lg hover:bg-black/5 text-gray-400 hover:text-[#4A6E91] transition-colors"
                 >
                   <Copy className="w-4 h-4" />
@@ -136,10 +169,15 @@ export default function Home() {
                   <div className="w-8 h-8 rounded-lg bg-[#85929E]/10 flex items-center justify-center text-[#85929E]">
                     <KeyRound className="w-4 h-4" />
                   </div>
-                  <span className="text-sm font-bold text-gray-700 uppercase tracking-wider">Organizer Code</span>
+                  <span className="text-sm font-bold text-gray-700 uppercase tracking-wider">
+                    Organizer Code
+                  </span>
                 </div>
                 <button
-                  onClick={() => navigator.clipboard.writeText(successData.organizer_code)}
+                  onClick={() => {
+                    navigator.clipboard.writeText(successData.organizer_code);
+                    toast.success("Organizer code copied!");
+                  }}
                   className="p-2 rounded-lg hover:bg-black/5 text-gray-400 hover:text-[#85929E] transition-colors"
                 >
                   <Copy className="w-4 h-4" />
@@ -162,7 +200,8 @@ export default function Home() {
               onClick={() => router.push(successData.url)}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                Launch Public Site <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                Launch Public Site{" "}
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </span>
             </Button>
             <Button
@@ -178,7 +217,7 @@ export default function Home() {
           </div>
         </motion.div>
       </main>
-    )
+    );
   }
 
   return (
@@ -192,16 +231,30 @@ export default function Home() {
         <nav className="flex items-center justify-between py-8">
           <Logo className="w-10 h-10" />
           <div className="flex items-center gap-6">
-            <a href="#features" className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">Features</a>
-            <a href="#faq" className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">FAQ</a>
-            <Button variant="outline" size="sm" className="hidden md:flex rounded-xl neo-flat text-[10px] font-bold uppercase tracking-widest px-6" onClick={() => setMode("manage")}>
+            <a
+              href="#features"
+              className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors"
+            >
+              Features
+            </a>
+            <a
+              href="#faq"
+              className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors"
+            >
+              FAQ
+            </a>
+            <Button
+              variant="outline"
+              size="sm"
+              className="hidden md:flex rounded-xl neo-flat text-[10px] font-bold uppercase tracking-widest px-6"
+              onClick={() => setMode("manage")}
+            >
               Login
             </Button>
           </div>
         </nav>
 
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start pt-12 lg:pt-24">
-
           {/* Left side: Scrolling Features */}
           <div className="lg:col-span-7 space-y-24 pb-24">
             <div className="space-y-8 text-center lg:text-left">
@@ -211,7 +264,9 @@ export default function Home() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full neo-flat text-sm font-medium text-gray-700 mb-4"
               >
                 <Sparkles className="w-4 h-4 text-[#4A6E91]" />
-                <span className="uppercase tracking-widest text-[10px] font-bold">Campus Operations Suite</span>
+                <span className="uppercase tracking-widest text-[10px] font-bold">
+                  Campus Operations Suite
+                </span>
               </motion.div>
 
               <motion.h1
@@ -220,7 +275,8 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-[1.1]"
               >
-                Orchestrate<br />
+                Orchestrate
+                <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#24292E] via-[#4A6E91] to-[#85929E]">
                   with precision.
                 </span>
@@ -232,7 +288,9 @@ export default function Home() {
                 transition={{ delay: 0.2 }}
                 className="text-xl text-gray-600 font-normal leading-relaxed max-w-lg mx-auto lg:mx-0"
               >
-                A meticulously crafted platform for university activities. Launch registrations, manage tasks, and check-in attendees from one beautiful dashboard.
+                A meticulously crafted platform for university activities.
+                Launch registrations, manage tasks, and check-in attendees from
+                one beautiful dashboard.
               </motion.p>
             </div>
 
@@ -247,9 +305,13 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-2xl neo-pressed flex items-center justify-center bg-[#F1F4F9]">
                   <Layers className="w-8 h-8 text-[#4A6E91]" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">Task Management</h3>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  Task Management
+                </h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  Assign logistical, catering, or technical duties to your team. Monitor progress through a centralized "Active Operations" board where every update is visible in real-time.
+                  Assign logistical, catering, or technical duties to your team.
+                  Monitor progress through a centralized "Active Operations"
+                  board where every update is visible in real-time.
                 </p>
               </motion.div>
 
@@ -262,9 +324,13 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-2xl neo-pressed flex items-center justify-center bg-[#F1F4F9]">
                   <Zap className="w-8 h-8 text-[#85929E]" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">Digital Check-ins</h3>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  Digital Check-ins
+                </h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  Ditch the paper lists. Scan QR codes or use our rapid-search attendee table to check people in as they arrive. Keep track of event capacity and actual attendance live.
+                  Ditch the paper lists. Scan QR codes or use our rapid-search
+                  attendee table to check people in as they arrive. Keep track
+                  of event capacity and actual attendance live.
                 </p>
               </motion.div>
 
@@ -277,9 +343,13 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-2xl neo-pressed flex items-center justify-center bg-[#F1F4F9]">
                   <Database className="w-8 h-8 text-[#24292E]" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">Data Portability</h3>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  Data Portability
+                </h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  Your attendee data belongs to you. Export the entire RSVP list to Excel/CSV with a single click at any point during or after the event for post-mission reporting.
+                  Your attendee data belongs to you. Export the entire RSVP list
+                  to Excel/CSV with a single click at any point during or after
+                  the event for post-mission reporting.
                 </p>
               </motion.div>
 
@@ -292,22 +362,40 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-2xl neo-pressed flex items-center justify-center bg-[#F1F4F9]">
                   <ShieldCheck className="w-8 h-8 text-[#4A6E91]" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">Secure Access Roles</h3>
+                <h3 className="text-3xl font-bold text-gray-900">
+                  Secure Access Roles
+                </h3>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  Separate "Admin" and "Organizer" levels ensure volunteers see what they need, while sensitive settings and code rotation remain under your exclusive control.
+                  Separate "Admin" and "Organizer" levels ensure volunteers see
+                  what they need, while sensitive settings and code rotation
+                  remain under your exclusive control.
                 </p>
               </motion.div>
             </div>
 
             {/* FAQ Section */}
             <div id="faq" className="pt-12 space-y-10">
-              <h2 className="text-4xl font-bold text-gray-900 ml-4">Common Protocols</h2>
+              <h2 className="text-4xl font-bold text-gray-900 ml-4">
+                Common Protocols
+              </h2>
               <div className="space-y-4">
                 {[
-                  { q: "How do I invite organizers?", a: "Once you deploy an event, you'll receive an Organizer Code. Provide this code to your team members for console access." },
-                  { q: "Is registration real-time?", a: "Yes. The moment someone RSVPs through your public event link, they appear instantly in your management attendee table." },
-                  { q: "Can I limit total participants?", a: "Absolutely. Set a capacity during initialization, and we'll automatically disable RSVPs once the target is reached." },
-                  { q: "What happens to the codes?", a: "Codes are generated once. If you suspect a breach, Admins can rotate both Admin and Organizer codes from the settings panel." }
+                  {
+                    q: "How do I invite organizers?",
+                    a: "Once you deploy an event, you'll receive an Organizer Code. Provide this code to your team members for console access.",
+                  },
+                  {
+                    q: "Is registration real-time?",
+                    a: "Yes. The moment someone RSVPs through your public event link, they appear instantly in your management attendee table.",
+                  },
+                  {
+                    q: "Can I limit total participants?",
+                    a: "Absolutely. Set a capacity during initialization, and we'll automatically disable RSVPs once the target is reached.",
+                  },
+                  {
+                    q: "What happens to the codes?",
+                    a: "Codes are generated once. If you suspect a breach, Admins can rotate both Admin and Organizer codes from the settings panel.",
+                  },
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
@@ -317,7 +405,9 @@ export default function Home() {
                     className="p-6 rounded-[1.5rem] neo-flat hover:bg-black/[0.01] transition-colors"
                   >
                     <h4 className="font-bold text-gray-800 mb-2">{item.q}</h4>
-                    <p className="text-gray-500 text-sm leading-relaxed">{item.a}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed">
+                      {item.a}
+                    </p>
                   </motion.div>
                 ))}
               </div>
@@ -327,16 +417,34 @@ export default function Home() {
             <footer className="pt-32 pb-12 border-t border-gray-200/50 mt-12 flex flex-col md:flex-row justify-between items-center gap-8">
               <div className="flex flex-col items-center md:items-start gap-4">
                 <Logo className="w-8 h-8" />
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-[0.2em]">Building the Future of Campus Life</p>
+                <p className="text-xs text-gray-400 font-medium uppercase tracking-[0.2em]">
+                  Building the Future of Campus Life
+                </p>
               </div>
               <div className="flex gap-8">
-                <a href="#" className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">Documentation</a>
-                <a href="#" className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">Security</a>
-                <a href="#" className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors">Contact</a>
+                <a
+                  href="#"
+                  className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors"
+                >
+                  Documentation
+                </a>
+                <a
+                  href="#"
+                  className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors"
+                >
+                  Security
+                </a>
+                <a
+                  href="#"
+                  className="text-xs font-bold text-gray-400 hover:text-gray-900 uppercase tracking-widest transition-colors"
+                >
+                  Contact
+                </a>
               </div>
-              <p className="text-xs text-gray-400">© 2026 CampusOps Logic. All rights reserved.</p>
+              <p className="text-xs text-gray-400">
+                © 2026 CampusOps Logic. All rights reserved.
+              </p>
             </footer>
-
           </div>
 
           {/* Right side: Sticky Form */}
@@ -356,7 +464,11 @@ export default function Home() {
                     <motion.div
                       layoutId="active-pill"
                       className="absolute inset-0 bg-white neo-flat rounded-xl -z-10"
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25,
+                      }}
                     />
                   )}
                   Deploy
@@ -369,7 +481,11 @@ export default function Home() {
                     <motion.div
                       layoutId="active-pill"
                       className="absolute inset-0 bg-white neo-flat rounded-xl -z-10"
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25,
+                      }}
                     />
                   )}
                   Manage
@@ -392,7 +508,9 @@ export default function Home() {
                   transition={{ delay: 0.05 }}
                   className="text-sm text-gray-500"
                 >
-                  {mode === "deploy" ? "Fast, secure event provisioning." : "Enter credentials to manage your mission."}
+                  {mode === "deploy"
+                    ? "Fast, secure event provisioning."
+                    : "Enter credentials to manage your mission."}
                 </motion.p>
               </div>
 
@@ -408,36 +526,72 @@ export default function Home() {
                       onSubmit={handleSubmit}
                       className="space-y-5"
                     >
-                      {error && (
-                        <div className="p-4 bg-red-50/80 border border-red-100 rounded-2xl text-red-600 text-sm font-semibold flex items-center gap-2 animate-shake">
-                          <X className="w-4 h-4" />
-                          {error}
-                        </div>
-                      )}
-
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="title" className="text-[10px] font-bold uppercase tracking-widest text-[#4A6E91]/80 ml-4 flex items-center gap-1.5"><Sparkles className="w-3 h-3" /> Event Identity</Label>
-                          <Input id="title" name="title" required placeholder="Spring Tech Mixer 2026" />
+                          <Label
+                            htmlFor="title"
+                            className="text-[10px] font-bold uppercase tracking-widest text-[#4A6E91]/80 ml-4 flex items-center gap-1.5"
+                          >
+                            <Sparkles className="w-3 h-3" /> Event Identity
+                          </Label>
+                          <Input
+                            id="title"
+                            name="title"
+                            required
+                            placeholder="Spring Tech Mixer 2026"
+                          />
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="description" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4">Description</Label>
-                          <Input id="description" name="description" required placeholder="A brief overview of the event..." />
+                          <Label
+                            htmlFor="description"
+                            className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4"
+                          >
+                            Description
+                          </Label>
+                          <Input
+                            id="description"
+                            name="description"
+                            required
+                            placeholder="A brief overview of the event..."
+                          />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="event_date" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"><CalendarDays className="w-3 h-3 text-[#4A6E91]" /> Date</Label>
+                            <Label
+                              htmlFor="event_date"
+                              className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"
+                            >
+                              <CalendarDays className="w-3 h-3 text-[#4A6E91]" />{" "}
+                              Date
+                            </Label>
                             <div className="relative overflow-hidden rounded-[1.5rem] neo-pressed">
-                              <Input id="event_date" name="event_date" type="date" required className="bg-transparent border-none shadow-none focus-visible:ring-0 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer" />
+                              <Input
+                                id="event_date"
+                                name="event_date"
+                                type="date"
+                                required
+                                className="bg-transparent border-none shadow-none focus-visible:ring-0 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                              />
                               <CalendarDays className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4A6E91] pointer-events-none opacity-50" />
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="event_time" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"><Clock className="w-3 h-3 text-[#85929E]" /> Time</Label>
+                            <Label
+                              htmlFor="event_time"
+                              className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"
+                            >
+                              <Clock className="w-3 h-3 text-[#85929E]" /> Time
+                            </Label>
                             <div className="relative overflow-hidden rounded-[1.5rem] neo-pressed">
-                              <Input id="event_time" name="event_time" type="time" required className="bg-transparent border-none shadow-none focus-visible:ring-0 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer" />
+                              <Input
+                                id="event_time"
+                                name="event_time"
+                                type="time"
+                                required
+                                className="bg-transparent border-none shadow-none focus-visible:ring-0 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                              />
                               <Clock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#85929E] pointer-events-none opacity-50" />
                             </div>
                           </div>
@@ -445,12 +599,34 @@ export default function Home() {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="capacity" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"><Users className="w-3 h-3 text-[#4A6E91]" /> Capacity</Label>
-                            <Input id="capacity" name="capacity" type="number" placeholder="Unlimited" />
+                            <Label
+                              htmlFor="capacity"
+                              className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"
+                            >
+                              <Users className="w-3 h-3 text-[#4A6E91]" />{" "}
+                              Capacity
+                            </Label>
+                            <Input
+                              id="capacity"
+                              name="capacity"
+                              type="number"
+                              placeholder="Unlimited"
+                            />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="location" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"><MapPin className="w-3 h-3 text-red-400" /> Location</Label>
-                            <Input id="location" name="location" required placeholder="Grand Hall A" />
+                            <Label
+                              htmlFor="location"
+                              className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-1.5"
+                            >
+                              <MapPin className="w-3 h-3 text-red-400" />{" "}
+                              Location
+                            </Label>
+                            <Input
+                              id="location"
+                              name="location"
+                              required
+                              placeholder="Grand Hall A"
+                            />
                           </div>
                         </div>
                       </div>
@@ -469,7 +645,8 @@ export default function Home() {
                             </span>
                           ) : (
                             <span className="flex items-center gap-2">
-                              Deploy Event <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                              Deploy Event{" "}
+                              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                             </span>
                           )}
                         </Button>
@@ -485,21 +662,19 @@ export default function Home() {
                       onSubmit={handleLogin}
                       className="space-y-6"
                     >
-                      {error && (
-                        <div className="p-4 bg-red-50/80 border border-red-100 rounded-2xl text-red-600 text-sm font-semibold flex items-center gap-2 animate-shake">
-                          <X className="w-4 h-4" />
-                          {error}
-                        </div>
-                      )}
-
                       <div className="space-y-6">
                         <div className="space-y-2">
-                          <Label htmlFor="code" className="text-[10px] font-bold uppercase tracking-widest text-[#85929E]/80 ml-4 flex items-center gap-1.5">Access Code</Label>
+                          <Label
+                            htmlFor="code"
+                            className="text-[10px] font-bold uppercase tracking-widest text-[#85929E]/80 ml-4 flex items-center gap-1.5"
+                          >
+                            Access Code
+                          </Label>
                           <Input
                             id="code"
                             type="password"
                             value={loginCode}
-                            onChange={e => setLoginCode(e.target.value)}
+                            onChange={(e) => setLoginCode(e.target.value)}
                             required
                             placeholder="ADM-..."
                             className="h-20 text-center tracking-widest font-mono text-2xl"
@@ -521,7 +696,8 @@ export default function Home() {
                             </span>
                           ) : (
                             <span className="flex items-center gap-2">
-                              Enter Command Center <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                              Enter Command Center{" "}
+                              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                             </span>
                           )}
                         </Button>
@@ -537,4 +713,3 @@ export default function Home() {
     </main>
   );
 }
-
