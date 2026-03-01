@@ -74,7 +74,7 @@ export default async function ManageDashboard({
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {event._count.rsvps}
+              {event._count?.rsvps ?? 0}
               {event.capacity ? ` / ${event.capacity}` : ""}
             </div>
           </CardContent>

@@ -26,8 +26,8 @@ export default async function PublicEventPage({
   }
 
   const { title, description, starts_at, location, capacity } = event;
-  const rsvpCount = event._count.rsvps;
-  const isFull = capacity !== null && rsvpCount >= capacity;
+  const rsvpCount = event._count?.rsvps ?? 0;
+  const isFull = capacity ? rsvpCount >= capacity : false;
 
   return (
     <main className="relative min-h-screen p-4 md:p-12 lg:p-16 flex items-start justify-center pt-8 md:pt-16 bg-[#F1F4F9] dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800">

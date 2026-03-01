@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/lib/hooks/useToast";
-import type { Task, TaskStatus, TaskRole } from "@prisma/client";
+import type { Task, TaskRole, TaskStatus } from "@/lib/types";
+import { TaskRoleValues } from "@/lib/types";
 import { Plus, X, Trash2, CheckCircle2, Circle, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,7 +22,7 @@ export default function TaskBoard({
   const toast = useToast();
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [title, setTitle] = useState("");
-  const [role, setRole] = useState<TaskRole>(TaskRole.Logistics);
+  const [role, setRole] = useState<TaskRole>(TaskRoleValues.Logistics);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
@@ -272,7 +273,7 @@ export default function TaskBoard({
                     Assign Sector
                   </Label>
                   <div className="grid grid-cols-2 gap-3">
-                    {Object.values(TaskRole).map((r) => (
+                    {Object.values(TaskRoleValues).map((r) => (
                       <button
                         key={r as string}
                         type="button"
