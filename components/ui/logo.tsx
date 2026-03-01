@@ -4,7 +4,7 @@ export function Logo({ className = "w-8 h-8", iconOnly = false }: { className?: 
     return (
         <div className={`flex items-center gap-2 ${className}`}>
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <rect width="32" height="32" rx="10" fill="#24292E" stroke="#4A6E91" stroke-width="1.5" />
+                <rect width="32" height="32" rx="10" fill="#24292E" stroke="#4A6E91" strokeWidth="1.5" />
                 <path d="M22 11C21.5 9 19 8 16 8C11.5817 8 8 11.5817 8 16C8 20.4183 11.5817 24 16 24C19 24 21.5 23 22 21" stroke="white" stroke-width="2.5" stroke-linecap="round" />
                 <path d="M16 13L19 16L16 19" stroke="#4A6E91" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
