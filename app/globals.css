@@ -81,14 +81,21 @@ body {
     8px 8px 16px var(--shadow-dark),
     -8px -8px 16px var(--shadow-light);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition:
+    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    background 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
 }
 
 .neo-flat:hover {
   box-shadow:
     12px 12px 20px var(--shadow-dark),
     -12px -12px 20px var(--shadow-light);
-  transform: translateY(-2px);
+  transform: translateZ(0) translateY(-2px);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -108,7 +115,12 @@ body {
     inset 5px 5px 10px var(--shadow-dark),
     inset -5px -5px 10px var(--shadow-light);
   border: 1px solid transparent;
-  transition: all 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* Professional Slate Gradient Elements */
@@ -118,20 +130,27 @@ body {
   box-shadow:
     0px 10px 20px rgba(74, 110, 145, 0.25),
     inset 2px 2px 4px rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease,
+    filter 0.3s ease;
   border: none;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
 }
 
 .neo-vibrant:hover {
   box-shadow:
     0px 15px 25px rgba(74, 110, 145, 0.35),
     inset 2px 2px 4px rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  transform: translateZ(0) translateY(-2px);
   filter: brightness(1.1);
 }
 
 .neo-vibrant:active {
-  transform: translateY(1px);
+  transform: translateZ(0) translateY(1px);
   box-shadow:
     0px 5px 10px rgba(74, 110, 145, 0.2),
     inset 2px 2px 4px rgba(0, 0, 0, 0.2);
@@ -274,6 +293,19 @@ input[type="time"]:focus::-webkit-calendar-picker-indicator {
 input:focus,
 textarea:focus {
   transition: all 0.2s ease;
+}
+
+/* Safari anti-flicker stabilization */
+@supports (-webkit-backdrop-filter: none) {
+  * {
+    -webkit-backface-visibility: hidden;
+  }
+
+  .neo-flat,
+  .neo-pressed,
+  .neo-vibrant {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
 }
 
 /* Smooth color transitions for validation states */

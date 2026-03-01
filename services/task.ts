@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
-import type { TaskStatus, TaskRole } from "@/lib/types";
-import { TaskStatusValues, TaskRoleValues } from "@/lib/types";
+import { TaskStatus, TaskRole } from "@prisma/client";
 
 export async function getTasksForEvent(event_id: string) {
   return prisma.task.findMany({
@@ -18,7 +17,7 @@ export async function createTask(
       event_id,
       title: data.title,
       role: data.role,
-      status: TaskStatusValues.todo,
+      status: TaskStatus.todo,
     },
   });
 }

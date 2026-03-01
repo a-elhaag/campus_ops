@@ -88,17 +88,17 @@ export function DatePicker({ value, onChange, disabled }: DatePickerProps) {
               className="fixed inset-0 z-[100]"
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute top-full left-0 mt-3 z-[101] w-80 p-6 rounded-[2rem] neo-flat shadow-2xl"
+              className="absolute bottom-full left-0 mb-3 z-[101] w-80 p-6 rounded-[2rem] neo-flat shadow-2xl"
             >
               {/* Month Navigation */}
               <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={handlePrevMonth}
-                  className="p-2 rounded-lg hover:neo-pressed transition-all"
+                  className="p-2 rounded-lg hover:neo-pressed"
                 >
                   <ChevronLeft className="w-5 h-5 text-[#4A6E91]" />
                 </button>
@@ -107,7 +107,7 @@ export function DatePicker({ value, onChange, disabled }: DatePickerProps) {
                 </h3>
                 <button
                   onClick={handleNextMonth}
-                  className="p-2 rounded-lg hover:neo-pressed transition-all"
+                  className="p-2 rounded-lg hover:neo-pressed"
                 >
                   <ChevronRight className="w-5 h-5 text-[#4A6E91]" />
                 </button>
@@ -147,7 +147,7 @@ export function DatePicker({ value, onChange, disabled }: DatePickerProps) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleSelectDate(day)}
                       className={cn(
-                        "aspect-square rounded-lg text-sm font-semibold transition-all",
+                        "aspect-square rounded-lg text-sm font-semibold",
                         isSelected
                           ? "neo-vibrant text-white shadow-lg scale-105"
                           : "neo-pressed text-gray-700 hover:bg-black/5",

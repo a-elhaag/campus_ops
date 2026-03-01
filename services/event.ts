@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { EventCategory } from "@prisma/client";
 
 export async function createEvent(data: {
   title: string;
@@ -6,7 +7,7 @@ export async function createEvent(data: {
   starts_at: Date;
   location: string;
   capacity?: number;
-  category?: string; // EventCategory from @/lib/types
+  category?: EventCategory;
 }) {
   const now = new Date();
   const datePart = now.toISOString().split("T")[0].replace(/-/g, "");

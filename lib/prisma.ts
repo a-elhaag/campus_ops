@@ -1,130 +1,15 @@
-// Temporary workaround for Prisma client generation issues
-// The actual Prisma client is used at runtime, but we need type stubs for build time
-import type {
-  Event as EventType,
-  Task as TaskType,
-  RSVP as RSVPType,
-} from "./types";
+import { PrismaClient } from "@prisma/client";
 
-// Mock Prisma client for build time
-const mockPrismaClient = {
-  event: {
-    create: async (data: any): Promise<EventType> => ({
-      id: "",
-      slug: "",
-      title: "",
-      description: "",
-      category: "General",
-      starts_at: new Date(),
-      location: "",
-      capacity: null,
-      admin_code: "",
-      organizer_code: "",
-      created_at: new Date(),
-      updated_at: new Date(),
-      _count: { rsvps: 0, tasks: 0 },
-    }),
-    findUnique: async (query: any): Promise<EventType | null> => null,
-    findMany: async (query: any): Promise<EventType[]> => [],
-    update: async (query: any): Promise<EventType> => ({
-      id: "",
-      slug: "",
-      title: "",
-      description: "",
-      category: "General",
-      starts_at: new Date(),
-      location: "",
-      capacity: null,
-      admin_code: "",
-      organizer_code: "",
-      created_at: new Date(),
-      updated_at: new Date(),
-      _count: { rsvps: 0, tasks: 0 },
-    }),
-    delete: async (query: any): Promise<EventType> => ({
-      id: "",
-      slug: "",
-      title: "",
-      description: "",
-      category: "General",
-      starts_at: new Date(),
-      location: "",
-      capacity: null,
-      admin_code: "",
-      organizer_code: "",
-      created_at: new Date(),
-      updated_at: new Date(),
-      _count: { rsvps: 0, tasks: 0 },
-    }),
-    deleteMany: async (query: any) => ({ count: 0 }),
-  },
-  task: {
-    create: async (data: any): Promise<TaskType> => ({
-      id: "",
-      event_id: "",
-      title: "",
-      role: "Logistics",
-      status: "todo",
-      created_at: new Date(),
-      updated_at: new Date(),
-    }),
-    findMany: async (query: any): Promise<TaskType[]> => [],
-    update: async (query: any): Promise<TaskType> => ({
-      id: "",
-      event_id: "",
-      title: "",
-      role: "Logistics",
-      status: "todo",
-      created_at: new Date(),
-      updated_at: new Date(),
-    }),
-    delete: async (query: any): Promise<TaskType> => ({
-      id: "",
-      event_id: "",
-      title: "",
-      role: "Logistics",
-      status: "todo",
-      created_at: new Date(),
-      updated_at: new Date(),
-    }),
-    deleteMany: async (query: any) => ({ count: 0 }),
-  },
-  rsvp: {
-    create: async (data: any): Promise<RSVPType> => ({
-      id: "",
-      event_id: "",
-      name: "",
-      contact: null,
-      checked_in: false,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }),
-    findMany: async (query: any): Promise<RSVPType[]> => [],
-    findUnique: async (query: any): Promise<RSVPType | null> => null,
-    update: async (query: any): Promise<RSVPType> => ({
-      id: "",
-      event_id: "",
-      name: "",
-      contact: null,
-      checked_in: false,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }),
-    delete: async (query: any): Promise<RSVPType> => ({
-      id: "",
-      event_id: "",
-      name: "",
-      contact: null,
-      checked_in: false,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }),
-    deleteMany: async (query: any) => ({ count: 0 }),
-    count: async (query: any) => 0,
-  },
-  $disconnect: async () => {},
+const prismaClientSingleton = () => {
+  return new PrismaClient();
 };
 
-const prisma = mockPrismaClient;
+declare const globalThis: {
+  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+} & typeof global;
+
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
 export default prisma;
+
+if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createEvent } from "@/services/event";
-import { EventCategoryValues } from "@/lib/types";
+import { EventCategory } from "@prisma/client";
 
 export async function POST(request: Request) {
   try {
@@ -15,10 +15,9 @@ export async function POST(request: Request) {
 
     // Validate category if provided, default to General
     const category =
-      data.category &&
-      Object.values(EventCategoryValues).includes(data.category)
+      data.category && Object.values(EventCategory).includes(data.category)
         ? data.category
-        : EventCategoryValues.General;
+        : EventCategory.General;
 
     const { event, organizer_code, admin_code } = await createEvent({
       title: data.title,
