@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock } from "lucide-react";
+import { Lock, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export default function LoginPage({
   params,
@@ -28,29 +28,40 @@ export default function LoginPage({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    
+    const formData = new FormData(e.currentTarget);
+    const code = formData.get("code") as string;
+
+    if (!code || code.trim().length === 0) {
+      setError("Access code is required");
+      return;
+    }
+
+    if (code.length < 6) {
+      setError("Access code should be at least 6 characters");
+      return;
+    }
+
     setLoading(true);
     setError("");
-
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
 
     try {
       const response = await fetch(`/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, code: data.code }),
+        body: JSON.stringify({ slug, code: code.trim() }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || "Login failed");
+        throw new Error(result.error || "Invalid code. Please check and try again.");
       }
 
       router.push(`/e/${slug}/manage`);
       router.refresh();
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Authentication failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -80,10 +91,16 @@ export default function LoginPage({
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6">
               {error && (
-                <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200/50 dark:border-red-200/10 text-red-900 dark:text-red-100 rounded-2xl text-sm font-semibold">
-                  <p className="flex items-center gap-2">
-                    <span>⚠️</span>
-                    {error}
+                <div className="animate-slideUp p-4 bg-red-50 dark:bg-red-900/20 border border-red-200/50 dark:border-red-200/10 text-red-900 dark:text-red-100 rounded-2xl text-sm font-semibold space-y-2">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                  <p className="text-xs text-red-800 dark:text-red-200 ml-8">
+                    Check that you've entered the code correctly, or contact the event organizer.
+                  </p>
+                </div>
+              )}
                   </p>
                 </div>
               )}
@@ -93,7 +110,7 @@ export default function LoginPage({
                   htmlFor="code"
                   className="text-xs font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-2"
                 >
-                  Access Code
+                  Access Code <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="code"
@@ -102,7 +119,11 @@ export default function LoginPage({
                   required
                   placeholder="••••••••"
                   autoFocus
-                  className="h-12 rounded-xl text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700/50 dark:text-gray-100 dark:placeholder-gray-400 font-mono tracking-widest"
+                  className={`h-12 rounded-xl text-base border-2 transition-colors dark:bg-gray-700/50 dark:text-gray-100 dark:placeholder-gray-400 font-mono tracking-widest ${
+                    error
+                      ? "border-red-500 dark:border-red-500"
+                      : "border-gray-300 dark:border-gray-600"
+                  }`}
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                   You received this code when the event was created
@@ -110,13 +131,15 @@ export default function LoginPage({
               </div>
             </CardContent>
             <CardFooter className="pt-8">
-              <button
+              <Button
                 type="submit"
+                size="lg"
+                className="w-full uppercase tracking-widest text-base"
                 disabled={loading}
-                className="w-full neo-vibrant h-12 rounded-2xl text-base font-bold uppercase tracking-widest disabled:opacity-50 transition-all"
+                isLoading={loading}
               >
-                {loading ? "Authenticating..." : "Login"}
-              </button>
+                Login
+              </Button>
             </CardFooter>
           </form>
         </Card>
